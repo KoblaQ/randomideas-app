@@ -1,6 +1,2 @@
-import message from './message';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import './css/style.css';
-
-console.log(message);
-
-const hello = () => console.log('Hellooo');

@@ -9,6 +9,9 @@ module.exports = {
     path: path.resolve(__dirname, '../public'),
     filename: 'bundle.js',
   },
+  performance: {
+    hints: false
+  },
   devServer: {
     static: {
       directory: path.resolve(__dirname, '../public'),
@@ -18,9 +21,6 @@ module.exports = {
     hot: true,
     compress: true,
     historyApiFallback: true,
-    proxy: {
-      '/api': 'http://localhost:5001',
-    },
   },
   module: {
     rules: [
