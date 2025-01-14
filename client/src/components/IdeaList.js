@@ -1,23 +1,10 @@
+import ideasApi from "../services/ideasApi"; 
+
 class IdeaList {
     constructor() {
         this._ideaListEl = document.querySelector('#idea-list');
-        this._ideas = [
-            {
-                id: 1,
-                text: 'A random idea',
-                tag: 'Business',
-                username: 'randomUser',
-                date: '2929/22/44'
-
-            },
-            {
-                id: 2,
-                text: 'A random idea',
-                tag: 'Technology',
-                username: 'randomUser2',
-                date: '2929/22/44'
-            }
-        ];
+        this._ideas = [];
+        this.getIdeas();
 
         this._validTags = new Set();
         this._validTags.add('technology');
@@ -26,6 +13,46 @@ class IdeaList {
         this._validTags.add('education');
         this._validTags.add('health');
         this._validTags.add('inventions');
+    }
+
+    addEventListeners() {
+        this._ideaListEl.addEventListener('click', (e) => {
+            if (e.target.classList.contains('fa-times')) {
+                e.stopImmediatePropagation();
+                const ideaId = e.target.parentElement.parentElement.dataset.id;
+                this.deleteIdea(ideaId);
+
+            }
+
+        })
+    }
+
+
+    async getIdeas(){
+        try {
+            const res = await ideasApi.getIdeas();
+            this._ideas = res.data.data;
+            this.render();
+        }
+        catch (error){
+            console.error(error);
+        }
+    }
+
+    async deleteIdea(ideaId){
+        try {
+            // Delete from server
+            const res  = await ideasApi.deleteIdea(ideaId);
+            this._ideas.filter((idea) => idea._id !== ideaId);
+            this.getIdeas();
+        } catch (error) {
+            alert('You can not delete this resource');
+        }
+    }
+
+    addIdeaToList(idea){
+        this._ideas.push(idea);
+        this.render();
     }
 
     getTagClass(tag){
@@ -43,11 +70,12 @@ class IdeaList {
         this._ideaListEl.innerHTML = this._ideas.map((idea) => {
 
             const tagClass = this.getTagClass(idea.tag);
+            const deleteBtn = idea.username === localStorage.getItem('username') ? `<button class="delete"><i class="fas fa-times"></i>
+                </button>` : '';
 
             return `
-            <div class= "card">
-                <button class="delete"><i class="fas fa-times"></i>
-                </button>
+            <div class= "card" data-id="${idea._id}">
+                ${deleteBtn}
                 <h3>${idea.text}</h3>
                 <p class="tag ${tagClass}">${idea.tag.toUpperCase()}</p>
                 <p>
@@ -57,6 +85,7 @@ class IdeaList {
             </div>
             `;
         }).join('');
+        this.addEventListeners();
     }
 }
 

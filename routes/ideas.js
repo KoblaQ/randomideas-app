@@ -2,31 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Idea = require('../models/Idea');
 
-
-// const ideas = [
-//     {
-//         id:  1,
-//         text: 'Positive NewLetter, a newsletter that only shares positive, uplifting news',
-//         tag: 'Technology',
-//         username: 'TonyStark',
-//         date: '2022-05-01',
-//     },
-//     {
-//         id:  2,
-//         text: 'Milk cartons that turn a different color the older that your milk is getting',
-//         tag: 'Inventions',
-//         username: 'SteveRogers',
-//         date: '2021-05-02',
-//     },
-//     {
-//         id:  3,
-//         text: 'ATM locatin app which lets yuo know where the closest ATM is and if it is in service',
-//         tag: 'Software',
-//         username: 'BruceBanner',
-//         date: '2021-05-02',
-//     },
-// ];
-
 // Get all ideas
 router.get('/', async (req, res) => {
     try {
@@ -73,17 +48,25 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
 
     try {
-        const updatedIdea = await Idea.findByIdAndUpdate(
-            req.params.id, 
-            {
-                $set: {
-                    text: req.body.text,
-                    tag: req.body.tag
-                }
-            }, 
-            {new: true} 
-        );
-        res.json({success: true, data: updatedIdea});
+        const idea = await Idea.findById(req.params.id);
+
+        // Match the usernames
+        if (idea.username === req.body.username) {
+            const updatedIdea = await Idea.findByIdAndUpdate(
+                req.params.id, 
+                {
+                    $set: {
+                        text: req.body.text,
+                        tag: req.body.tag
+                    }
+                }, 
+                {new: true} 
+            );
+            return res.json({success: true, data: updatedIdea});
+        }
+        
+        // Usernames does not match
+        res.status(403).json({ success: false, error: 'You are not authorized to update this resource'}); 
     } catch (error) {
         console.log(error);
         res.status(500).json({success: false, error: 'Something went wrong'});
@@ -93,8 +76,18 @@ router.put('/:id', async (req, res) => {
 // Delete an idea
 router.delete('/:id', async (req, res) => {
     try {
-        await Idea.findByIdAndDelete(req.params.id);
-        res.json({success: true, data: {} });
+        const idea = await Idea.findById(req.params.id);
+
+        // Match the usernames
+
+        if (idea.username === req.body.username) {
+            await Idea.findByIdAndDelete(req.params.id);
+            return res.json({success: true, data: {} });
+        }
+
+        // Usernames do not match
+        res.status(403).json({ success: false, error: 'You are not authorized to delete this resource'}); 
+        
     } catch (error) {
         console.log(error),
         res.status(500).json({ success: false, error: 'Something went wrong'}); 
