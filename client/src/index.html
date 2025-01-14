@@ -13,10 +13,12 @@
         <i class="fa-solid fa-plus fa-2x"></i>
       </button>
     </header>
+
     <div class="container">
       <div id="idea-list" class="ideas">
         <div class= "card">
-          <button class="delete"><i class="fasfa-times"></i></button>
+          <button class="delete"><i class="fas fa-times"></i>
+          </button>
           <h3>Positive Newsletter, a newsletter that only shares positive, uplifting news</h3>
           <p class="tag tag-technology">TECHNOLOGY</p>
           <p>
@@ -25,7 +27,7 @@
           </p>
         </div>
         <div class= "card">
-          <button class="delete"><i class="fasfa-times"></i></button>
+          <button class="delete"><i class="fas fa-times"></i></button>
           <h3>Milk cartons that turn a different color the older that your milk is getting</h3>
           <p class="tag tag-inventions">INVENTIONS</p>
           <p>
@@ -34,7 +36,7 @@
           </p>
         </div>
         <div class= "card">
-          <button class="delete"><i class="fasfa-times"></i></button>
+          <button class="delete"><i class="fas fa-times"></i></button>
           <h3>ATM location app which lets you know where the closest ATM is and if it is in service</h3>
           <p class="tag tag-software">SOFTWARE</p>
           <p>
@@ -46,7 +48,24 @@
     </div>
 
     <div id="modal" class="modal">
-      <div id="form-modal" class="modal-box"></div>
+      <div id="form-modal" class="modal-box">
+        FORM HERE
+        <form id="idea-form">
+          <div class="form-control">
+            <label for="idea-text">Enter a Username</label>
+            <input type="text" name="username" id="username" value="value" />
+          </div>
+          <div class="form-control">
+            <label for="idea-text">What's Your Idea?</label>
+            <textarea name="text" id="idea-text"></textarea>
+          </div>
+          <div class="form-control">
+            <label for="tag">Tag</label>
+            <input type="text" name="tag" id="tag" />
+          </div>
+          <button class="btn" type="submit" id="submit">Submit</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
